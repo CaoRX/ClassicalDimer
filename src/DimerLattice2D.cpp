@@ -22,18 +22,19 @@ void DimerLattice2D::malloc_space() {
 		for (int y = 0; y < H; ++y) {
 			dimer[x][y] = new bool*[D];
 			for (int dir = 0; dir < D / 2; ++dir) {
-				dimer[x][y][dir] = new bool;
-				*dimer[x][y][dir] = false;
+				dimer[x][y][dir * 2] = new bool;
+				*dimer[x][y][dir * 2] = false;
 			}
 		}
 	}
 	int lx = -1, ly = -1;
 	for (int x = 0; x < W; ++x) {
 		for (int y = 0; y < H; ++y) {
-			for (int dir = D / 2; dir < D; ++dir) {
-				lx = modify_int(x + dx[dir], W);
-				ly = modify_int(y + dy[dir], H);
-				dimer[x][y][dir] = dimer[lx][ly][dir - (D / 2)];
+			for (int dir = 0; dir < D / 2; ++dir) {
+				lx = modify_int(x + dx[dir * 2], W);
+				ly = modify_int(y + dy[dir * 2], H);
+				dimer[lx][ly][dir * 2 + 1] = dimer[x][y][dir * 2];
+				//std::cout << x << ' ' << y << ' ' << (dir * 2) << ' ' << lx << ' ' << ly << ' ' << (dir * 2 + 1) << std::endl;
 			}
 		}
 	}
@@ -152,7 +153,7 @@ int DimerLattice2D::choose_dir_out(int dir_in) {
 	double cur = 0.0;
 	for (int dir = 0; dir < D; ++dir) {
 		if (dir != dir_in) {
-			cur += weight[(dir_in % 2)][dir % 2];
+			cur += weight[dc[dir_in]][dc[dir]];
 			//std::cout << cur << std::endl;
 			if (cur >= choice) {
 				return dir;
@@ -236,9 +237,9 @@ void DimerLattice2D::print_corr() {
 	double normal_m = M[1];
 	for (int i = 0; i < W; ++i) {
 		M[i] /= normal_m;
-		//std::cout << M[i] << ' ';
+		std::cout << M[i] << ' ';
 	}
-	//std::cout << std::endl;
+	std::cout << std::endl;
 	corrM_file.write((char *)M, sizeof(double));
 }
 
