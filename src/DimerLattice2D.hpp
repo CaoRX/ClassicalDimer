@@ -8,9 +8,9 @@
 #include <string>
 #define eps 1e-9
 
-const int dx[8] = {1, -1, 0, 0, 1, -1, 1, -1};
-const int dy[8] = {0, 0, 1, -1, -1, 1, 1, -1};
-const int dc[8] = {0, 0, 0, 0, 1, 1, 1, 1};
+//const int dx[8] = {1, -1, 0, 0, 1, -1, 1, -1};
+//const int dy[8] = {0, 0, 1, -1, -1, 1, 1, -1};
+//const int dc[8] = {0, 0, 0, 0, 1, 1, 1, 1};
 
 const int sqr_dx[4] = {1, -1, 0, 0};
 const int sqr_dy[4] = {0, 0, 1, -1};
