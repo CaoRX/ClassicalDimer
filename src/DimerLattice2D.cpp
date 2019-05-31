@@ -61,10 +61,10 @@ void DimerLattice2D::set_initial_values() {
 		weight[0][0] = weight[0][1] = weight[1][0] = w1 / 7.0;
 	}
 
-	if (abs(w2) > eps) {
+	if (fabs(w2) > eps) {
 		weight[1][0] /= w2; weight[1][1] /= w2;
 	}
-	if (abs(w1) > eps) {
+	if (fabs(w1) > eps) {
 		weight[0][0] /= w1; weight[0][1] /= w1;
 	}
 
