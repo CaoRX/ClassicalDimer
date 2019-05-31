@@ -3,6 +3,9 @@
 #include <random>
 #include <cmath>
 #include <vector>
+#include <iostream>
+#include <fstream>
+#include <string>
 #define eps 1e-9
 
 const int dx[8] = {1, 1, 0, -1, -1, -1, 0, 1};
@@ -29,6 +32,9 @@ public:
 	std::uniform_real_distribution<double> Random_double;
 	int dir_in;
 	bool debug;
+	std::fstream corrM_file;
+	std::string corrM_filename;
+
 
 	DimerLattice2D(int _H, int _W, int _D = 8, double _w1 = 1.0, double _w2 = 0.0);
 	void malloc_space();
@@ -57,5 +63,6 @@ public:
 	bool check_degree(int degree = 1);
 	void print_corr();
 
+	~DimerLattice2D();
 
 };

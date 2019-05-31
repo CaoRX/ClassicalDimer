@@ -1,6 +1,7 @@
 #include "DimerLattice2D.hpp"
 #include <cstring>
 #include <iostream>
+#include <fstream>
 #include <ctime>
 #include <cstdlib>
 
@@ -78,6 +79,8 @@ void DimerLattice2D::set_initial_values() {
 	}
 	dir_in = -1;
 	debug = false;
+	corrM_filename = "data/corrM" + std::to_string(random_seed) + ".dat";
+	corrM_file.open(corrM_filename, std::ios::out | std::ios::binary);
 }
 void DimerLattice2D::set_random() {
 	random_seed = (unsigned)time(NULL);
@@ -87,10 +90,10 @@ void DimerLattice2D::set_random() {
 }
 
 DimerLattice2D::DimerLattice2D(int _H, int _W, int _D, double _w1, double _w2): H(_H), W(_W), D(_D), w1(_w1), w2(_w2) {
+	set_random();
 	malloc_space();
 	set_initial_state();
 	set_initial_values();
-	set_random();
 }
 
 bool & DimerLattice2D::getd_ref(int x, int y, int dir) {
@@ -233,7 +236,12 @@ void DimerLattice2D::print_corr() {
 	double normal_m = M[1];
 	for (int i = 0; i < W; ++i) {
 		M[i] /= normal_m;
-		std::cout << M[i] << ' ';
+		//std::cout << M[i] << ' ';
 	}
-	std::cout << std::endl;
+	//std::cout << std::endl;
+	corrM_file.write((char *)M, sizeof(double));
+}
+
+DimerLattice2D::~DimerLattice2D() {
+	corrM_file.close();
 }
