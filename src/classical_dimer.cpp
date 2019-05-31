@@ -1,6 +1,7 @@
 #include "DimerLattice2D.hpp"
 #include <iostream>
 #include <cmath>
+#include <cstring>
 
 double w1 = default_w1, w2 = default_w2;
 int L = default_L, loop = default_loop;
