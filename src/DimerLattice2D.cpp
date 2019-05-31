@@ -4,6 +4,7 @@
 #include <fstream>
 #include <ctime>
 #include <cstdlib>
+#include <algorithm>
 
 int modify_int(int x, int range) {
 	return (x + range) % range;
@@ -31,8 +32,8 @@ void DimerLattice2D::malloc_space() {
 	for (int x = 0; x < W; ++x) {
 		for (int y = 0; y < H; ++y) {
 			for (int dir = 0; dir < D / 2; ++dir) {
-				lx = modify_int(x + dx[dir * 2], W);
-				ly = modify_int(y + dy[dir * 2], H);
+				lx = modify_int(x + local_dx[dir * 2], W);
+				ly = modify_int(y + local_dy[dir * 2], H);
 				dimer[lx][ly][dir * 2 + 1] = dimer[x][y][dir * 2];
 				//std::cout << x << ' ' << y << ' ' << (dir * 2) << ' ' << lx << ' ' << ly << ' ' << (dir * 2 + 1) << std::endl;
 			}
@@ -55,12 +56,12 @@ void DimerLattice2D::set_initial_state() {
 }
 void DimerLattice2D::set_initial_values() {
 	if (w1 > w2) {
-		weight[0][0] = (w1 - 4.0 * w2 / 7.0) / 3.0;
-		weight[0][1] = weight[1][0] = weight[1][1] = w2 / 7.0;
+		weight[0][0] = (w1 - (D - 4) * w2 / (D - 1)) / (4 - 1);
+		weight[0][1] = weight[1][0] = weight[1][1] = w2 / (D - 1);
 	}
 	else {
-		weight[1][1] = (w2 - 4.0 * w1 / 7.0) / 3.0;
-		weight[0][0] = weight[0][1] = weight[1][0] = w1 / 7.0;
+		weight[1][1] = (w2 - 4 * w1 / (D - 1)) / (D - 4 - 1);
+		weight[0][0] = weight[0][1] = weight[1][0] = w1 / (D - 1);
 	}
 
 	if (fabs(w2) > eps) {
@@ -89,12 +90,61 @@ void DimerLattice2D::set_random() {
 	Random_double = std::uniform_real_distribution<double>(0.0, 1.0);
 	srand(random_seed);
 }
+void DimerLattice2D::set_dd() {
+	D = ((edx == edy) || (edx == 0) || (edy == 0)) ? (4 + 4) : (4 + 8);
+	local_dx = new int[D];
+	local_dy = new int[D];
+	local_dc = new int[D];
+	for (int i = 0; i < 4; ++i) {
+		local_dx[i] = sqr_dx[i];
+		local_dy[i] = sqr_dy[i];
+		local_dc[i] = 0;
+	}
+	for (int i = 4; i < D; ++i) {
+		local_dc[i] = 1;
+	}
+	int dcur = 4;
+	if (edx == edy) {
+		local_dx[dcur] = edx; local_dy[dcur] = edy; ++dcur;
+		local_dx[dcur] = -edx; local_dy[dcur] = -edy; ++dcur;
+		local_dx[dcur] = -edx; local_dy[dcur] = edy; ++dcur;
+		local_dx[dcur] = edx; local_dy[dcur] = -edy; ++dcur;
+		return ;
+	}
+	if (edx == 0 || edy == 0) {
+		local_dx[dcur] = edx; local_dy[dcur] = edy; ++dcur;
+		local_dx[dcur] = -edx; local_dy[dcur] = -edy; ++dcur;
+		local_dx[dcur] = edy; local_dy[dcur] = edx; ++dcur;
+		local_dx[dcur] = -edy; local_dy[dcur] = -edx; ++dcur;
+		return ;
+	}
 
-DimerLattice2D::DimerLattice2D(int _H, int _W, int _D, double _w1, double _w2): H(_H), W(_W), D(_D), w1(_w1), w2(_w2) {
+	local_dx[dcur] = edx; local_dy[dcur] = edy; ++dcur;
+	local_dx[dcur] = -edx; local_dy[dcur] = -edy; ++dcur;
+	local_dx[dcur] = -edx; local_dy[dcur] = edy; ++dcur;
+	local_dx[dcur] = edx; local_dy[dcur] = -edy; ++dcur;
+
+	std::swap(edx, edy);
+
+	local_dx[dcur] = edx; local_dy[dcur] = edy; ++dcur;
+	local_dx[dcur] = -edx; local_dy[dcur] = -edy; ++dcur;
+	local_dx[dcur] = -edx; local_dy[dcur] = edy; ++dcur;
+	local_dx[dcur] = edx; local_dy[dcur] = -edy; ++dcur;
+
+	std::swap(edx, edy);
+
+}
+
+DimerLattice2D::DimerLattice2D(int _H, int _W, double _w1, double _w2, int _edx, int _edy): H(_H), W(_W), w1(_w1), w2(_w2), edx(_edx), edy(_edy) {
 	set_random();
+	set_dd();
 	malloc_space();
 	set_initial_state();
 	set_initial_values();
+
+	//for (int i = 0; i < D; ++i) {
+	//	std::cout << local_dx[i] << ' ' << local_dy[i] << ' ' << local_dc[i] << std::endl;
+	//}
 }
 
 bool & DimerLattice2D::getd_ref(int x, int y, int dir) {
@@ -140,7 +190,7 @@ void DimerLattice2D::make_defect() {
 	int dfx = random_int(W), dfy = random_int(H);
 	defect[0][0] = dfx; defect[0][1] = dfy;
 	int exit_n = find_exit(dfx, dfy);
-	int dfex = modify_int(dfx + dx[exit_n], W), dfey = modify_int(dfy + dy[exit_n], H);
+	int dfex = modify_int(dfx + local_dx[exit_n], W), dfey = modify_int(dfy + local_dy[exit_n], H);
 	defect[1][0] = dfex; defect[1][1] = dfey;
 
 	dir_in = exit_n;
@@ -153,7 +203,7 @@ int DimerLattice2D::choose_dir_out(int dir_in) {
 	double cur = 0.0;
 	for (int dir = 0; dir < D; ++dir) {
 		if (dir != dir_in) {
-			cur += weight[dc[dir_in]][dc[dir]];
+			cur += weight[local_dc[dir_in]][local_dc[dir]];
 			//std::cout << cur << std::endl;
 			if (cur >= choice) {
 				return dir;
@@ -169,8 +219,8 @@ bool DimerLattice2D::move_defect() {
 	//if (dir_out == -1) {
 	//	std::cout << "Error: cannot choose direction out" << std::endl;
 	//}
-	int dfx_ext = modify_int(defect[0][0] + dx[dir_out], W);
-	int dfy_ext = modify_int(defect[0][1] + dy[dir_out], H);
+	int dfx_ext = modify_int(defect[0][0] + local_dx[dir_out], W);
+	int dfy_ext = modify_int(defect[0][1] + local_dy[dir_out], H);
 
 	//std::cout << "dfx_ext = " << dfx_ext << " dfy_ext = " << dfy_ext << std::endl;
 	//std::cout << "dir_out = " << dir_out << std::endl;
@@ -189,8 +239,8 @@ bool DimerLattice2D::move_defect() {
 	int exit_n = find_exit(dfx_ext, dfy_ext);
 	setd(defect[0][0], defect[0][1], dir_out, true);
 	setd(dfx_ext, dfy_ext, exit_n, false);
-	defect[0][0] = modify_int(dfx_ext + dx[exit_n], W);
-	defect[0][1] = modify_int(dfy_ext + dy[exit_n], H);
+	defect[0][0] = modify_int(dfx_ext + local_dx[exit_n], W);
+	defect[0][1] = modify_int(dfy_ext + local_dy[exit_n], H);
 	return false;
 }
 void DimerLattice2D::print_defect() {

@@ -4,9 +4,10 @@
 #include <cstring>
 
 double w1 = default_w1, w2 = default_w2;
+int Dx = default_dx, Dy = default_dy;
 int L = default_L, loop = default_loop;
 void Test_DimerLattice() {
-	DimerLattice2D DL(L, L, 8, w1, w2);
+	DimerLattice2D DL(L, L, w1, w2, Dx, Dy);
 	//DL.print_configuration();
 	for (int i = 0; i < loop; ++i) {
 		//if (i == 84) {
@@ -15,6 +16,7 @@ void Test_DimerLattice() {
 		DL.update_configuration();
 		if (!DL.check_degree()) {
 			std::cerr << "error at " << i << "-th loop" << std::endl;
+			DL.print_configuration();
 			return ;
 		}
 		//else {
@@ -54,6 +56,12 @@ void load_arg(char *argv)
 	}
 	if (control == "w2") {
 		w2 = atof(equ + 1);
+	}
+	if (control == "dx") {
+		Dx = atoi(equ + 1);
+	}
+	if (control == "dy") {
+		Dy = atoi(equ + 1);
 	}
 
 }
