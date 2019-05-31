@@ -2,6 +2,7 @@
 
 #include <random>
 #include <cmath>
+#include <vector>
 #define eps 1e-9
 
 const int dx[8] = {1, 1, 0, -1, -1, -1, 0, 1};
@@ -10,10 +11,15 @@ const int dy[8] = {0, 1, 1, 1, 0, -1, -1, -1};
 //const int dx[12] = {1, 2, 1, 0, -1, -2, -1, -2, -1, 0, 1, 2};
 //const int dy[12] = {0, 1, 2, 1, 2, 1, 0, -1, -2, -1, -2, -1, 0};
 
+const double default_w1 = 1.0, default_w2 = 0.0;
+const int default_L = 8, default_loop = 128;
+
 class DimerLattice2D {
 public:
 	int H, W, D;
 	bool ****dimer;
+	int edx, edy;
+	std::vector<int> dxx, dyy;
 	double w1, w2;
 	int defect[2][2];
 	double weight[2][2];
@@ -22,6 +28,7 @@ public:
 	std::default_random_engine random_engine;
 	std::uniform_real_distribution<double> Random_double;
 	int dir_in;
+	bool debug;
 
 	DimerLattice2D(int _H, int _W, int _D = 8, double _w1 = 1.0, double _w2 = 0.0);
 	void malloc_space();

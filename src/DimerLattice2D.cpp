@@ -62,10 +62,10 @@ void DimerLattice2D::set_initial_values() {
 	}
 
 	if (abs(w2) > eps) {
-		weight[0][0] /= w2; weight[0][1] /= w2;
+		weight[1][0] /= w2; weight[1][1] /= w2;
 	}
 	if (abs(w1) > eps) {
-		weight[1][0] /= w1; weight[1][1] /= w1;
+		weight[0][0] /= w1; weight[0][1] /= w1;
 	}
 
 	//std::cout << weight[0][0] << ' ' << weight[0][1] << std::endl;
@@ -77,6 +77,7 @@ void DimerLattice2D::set_initial_values() {
 		}
 	}
 	dir_in = -1;
+	debug = false;
 }
 void DimerLattice2D::set_random() {
 	random_seed = (unsigned)time(NULL);
@@ -161,6 +162,9 @@ bool DimerLattice2D::move_defect() {
 	//defect 1 will not move
 	//defect 0 will move until meet 1
 	int dir_out = choose_dir_out(dir_in);
+	//if (dir_out == -1) {
+	//	std::cout << "Error: cannot choose direction out" << std::endl;
+	//}
 	int dfx_ext = modify_int(defect[0][0] + dx[dir_out], W);
 	int dfy_ext = modify_int(defect[0][1] + dy[dir_out], H);
 
@@ -203,8 +207,10 @@ void DimerLattice2D::update_configuration() {
 	//print_defect();
 	while (!move_defect()) {
 		measure_corr();
-		//print_defect();
-		//print_configuration();
+		//if (debug) {
+		//	print_defect();
+		//	print_configuration();
+		//}
 	}
 }
 

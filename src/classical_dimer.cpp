@@ -1,21 +1,68 @@
 #include "DimerLattice2D.hpp"
 #include <iostream>
 #include <cmath>
-void Test_DimerLattice(int loop) {
-	DimerLattice2D DL(64, 64, 8, 1.0, exp(-4.0));
+
+double w1 = default_w1, w2 = default_w2;
+int L = default_L, loop = default_loop;
+void Test_DimerLattice() {
+	DimerLattice2D DL(L, L, 8, w1, w2);
 	//DL.print_configuration();
 	for (int i = 0; i < loop; ++i) {
+		//if (i == 84) {
+		//	DL.debug = true;
+		//}
 		DL.update_configuration();
+		if (!DL.check_degree()) {
+			std::cerr << "error at " << i << "-th loop" << std::endl;
+			return ;
+		}
+		//else {
+		//	std::cout << "correct at " << i << "-th loop" << std::endl;
+		//}
 	}
 	//DL.print_configuration();
 
-	std::cout << DL.check_degree() << std::endl;
+	if (!DL.check_degree()) {
+		std::cout << "something wrong!!!!!" << std::endl;
+	}
 	DL.print_corr();
 
 	//DL.getd_ref(0, 0, 0) = true;
 	//DL.print_configuration();
 }
-int main() {
-	Test_DimerLattice(100);
+std::string to_str(char *argv)
+{
+	std::string s = "";
+	for (int i = 0; argv[i] != '\0'; ++i)
+		s.push_back(argv[i]);
+	return s;
+}
+void load_arg(char *argv)
+{
+	char *equ = strchr(argv, '=');
+	equ[0] = '\0';
+	std::string control = to_str(argv);
+	if (control == "L") {
+		L = atoi(equ + 1);
+	}
+	if (control == "loop") {
+		loop = atoi(equ + 1);
+	}
+	if (control == "w1") {
+		w1 = atof(equ + 1);
+	}
+	if (control == "w2") {
+		w2 = atof(equ + 1);
+	}
+
+}
+void load_args(int argc, char **argv)
+{
+	for (int i = 1; i < argc; ++i)
+		load_arg(argv[i]);
+}
+int main(int argc, char **argv) {
+	load_args(argc, argv);
+	Test_DimerLattice();
 	return 0;
 }
