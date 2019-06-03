@@ -285,12 +285,14 @@ bool DimerLattice2D::check_degree(int degree) {
 }
 void DimerLattice2D::print_corr() {
 	double normal_m = M[1];
-	for (int i = 0; i < W; ++i) {
-		M[i] /= normal_m;
-		std::cout << M[i] << ' ';
-	}
-	std::cout << std::endl;
-	corrM_file.write((char *)M, sizeof(double));
+	//for (int i = 0; i < W; ++i) {
+	//	M[i] /= normal_m;
+	//	std::cout << M[i] << ' ';
+	//}
+
+	//std::cout << std::endl;
+	std::cout << "data file no = " << random_seed << std::endl;
+	corrM_file.write((char *)M, sizeof(double) * W);
 }
 
 DimerLattice2D::~DimerLattice2D() {

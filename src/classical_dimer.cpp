@@ -63,6 +63,12 @@ void load_arg(char *argv)
 	if (control == "dy") {
 		Dy = atoi(equ + 1);
 	}
+	if (control == "logw1") {
+		w1 = exp(atof(equ + 1));
+	}
+	if (control == "logw2") {
+		w2 = exp(atof(equ + 1));
+	}
 
 }
 void load_args(int argc, char **argv)
