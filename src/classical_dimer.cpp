@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cmath>
 #include <cstring>
+#include <ctime>
 
 double w1 = default_w1, w2 = default_w2;
 int Dx = default_dx, Dy = default_dy;
@@ -29,6 +30,8 @@ void Test_DimerLattice() {
 		DL.stdlog_file << "something wrong!!!!!" << std::endl;
 	}
 	DL.print_corr();
+	unsigned end_time = (unsigned)time(NULL);
+	DL.stdlog_file << "total time = " << end_time - DL.random_seed << " seconds." << std::endl;
 
 	//DL.getd_ref(0, 0, 0) = true;
 	//DL.print_configuration();
