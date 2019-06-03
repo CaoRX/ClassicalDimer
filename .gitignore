@@ -37,3 +37,6 @@
 
 #build folder
 build/
+
+#mac file
+.DS_Store
