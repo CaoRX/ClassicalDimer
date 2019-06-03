@@ -7,8 +7,9 @@
 double w1 = default_w1, w2 = default_w2;
 int Dx = default_dx, Dy = default_dy;
 int L = default_L, loop = default_loop;
+double equil = default_equil;
 void Test_DimerLattice() {
-	DimerLattice2D DL(L, L, w1, w2, Dx, Dy);
+	DimerLattice2D DL(L, L, w1, w2, Dx, Dy, loop, equil);
 	//DL.print_configuration();
 	for (int i = 0; i < loop; ++i) {
 		//if (i == 84) {
@@ -71,6 +72,9 @@ void load_arg(char *argv)
 	}
 	if (control == "logw2") {
 		w2 = exp(atof(equ + 1));
+	}
+	if (control == "equil") {
+		equil = atof(equ + 1);
 	}
 
 }
