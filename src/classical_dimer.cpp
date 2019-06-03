@@ -20,13 +20,13 @@ void Test_DimerLattice() {
 			return ;
 		}
 		//else {
-		//	std::cout << "correct at " << i << "-th loop" << std::endl;
+		//	stdlog_file << "correct at " << i << "-th loop" << std::endl;
 		//}
 	}
 	//DL.print_configuration();
 
 	if (!DL.check_degree()) {
-		std::cout << "something wrong!!!!!" << std::endl;
+		stdlog_file << "something wrong!!!!!" << std::endl;
 	}
 	DL.print_corr();
 

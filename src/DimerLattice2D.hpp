@@ -37,8 +37,8 @@ public:
 	std::uniform_real_distribution<double> Random_double;
 	int dir_in;
 	bool debug;
-	std::fstream corrM_file;
-	std::string corrM_filename;
+	std::fstream corrM_file, stdlog_file;
+	std::string corrM_filename, stdlog_filename;
 
 	int *local_dx, *local_dy, *local_dc;
 
