@@ -66,23 +66,26 @@ def load_update_size(data_no):
 	data_us = load_file(get_filename('update', data_no), data_shape = (1, -1), data_type = 'int')
 	return data_us
 
-data_no = 1559637108
+#data_no = 1559637108
 #update_size = load_update_size(data_no)
 #print(update_size)
 #print(np.average(update_size))
 #print(np.min(update_size))
 
 
-if (plot_M_flag):
-	plot_M(data_no)
-if (plot_D_flag):
-	plot_D(data_no)
+#if (plot_M_flag):
+#	plot_M(data_no)
+#if (plot_D_flag):
+#	plot_D(data_no)
 
-data_no = 1559636279
-if (plot_M_flag):
-	plot_M(data_no, True)
-if (plot_D_flag):
-	plot_D(data_no, True)
+#data_no = 1559636279
+#if (plot_M_flag):
+#	plot_M(data_no, True)
+#if (plot_D_flag):
+#	plot_D(data_no, True)
+data_no = 1559644990
+plot_M(data_no, True)
+
 
 plt.legend()
 plt.show()
