@@ -312,7 +312,7 @@ void DimerLattice2D::calculate_set() {
 void DimerLattice2D::measure_corrD() {
 	//calculate_set();
 	for (int dx = 0; dx < W; ++dx) {
-		for (int x = 0; x < 1; ++x) {
+		for (int x = 0; x < 2; ++x) {
 			for (int y = 0; y < H; ++y) {
 				for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
 					if (is_in_set(x, y, set_no) && is_in_set(x + dx, y, set_no)) {
