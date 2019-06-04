@@ -273,6 +273,7 @@ bool DimerLattice2D::move_defect() {
 	setd(dfx_ext, dfy_ext, exit_n, false);
 	defect[0][0] = modify_int(dfx_ext + local_dx[exit_n], W);
 	defect[0][1] = modify_int(dfy_ext + local_dy[exit_n], H);
+	dir_in = (exit_n ^ 1);
 	return false;
 }
 void DimerLattice2D::print_defect() {
@@ -283,14 +284,14 @@ void DimerLattice2D::print_defect() {
 		stdlog_file << std::endl;
 	}
 }
-void DimerLattice2D::measure_corrD() {
+void DimerLattice2D::measure_corrM() {
 	if (defect[1][1] == defect[0][1]) {
 		M[modify_int(defect[1][0] - defect[0][0], W)] += 1.0;
 	}
 }
-void DimerLattice2D::measure_corrM() {
+void DimerLattice2D::measure_corrD() {
 	for (int dx = 0; dx < W; ++dx) {
-		for (int x = 0; x < W; ++x) {
+		for (int x = 0; x < 1; ++x) {
 			for (int y = 0; y < H; ++y) {
 				for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
 					if (is_in_set(x, y, set_no) && is_in_set(x + dx, y, set_no)) {
@@ -303,12 +304,12 @@ void DimerLattice2D::measure_corrM() {
 }
 void DimerLattice2D::update_configuration() {
 	make_defect();
-	update_size[now_loop] = 0;
+	update_size[now_loop] = 2;
 	//print_defect();
 	while (!move_defect()) {
-		++update_size[now_loop];
+		update_size[now_loop] += 2;
 		if (now_loop > equil_loop) {
-			measure_corrD();
+			measure_corrM();
 		}
 		//if (debug) {
 		//	print_defect();
@@ -316,8 +317,9 @@ void DimerLattice2D::update_configuration() {
 		//}
 	}
 	if (now_loop > equil_loop) {
-		measure_corrM();
+		measure_corrD();
 	}
+	//std::cout << update_size[now_loop] << std::endl;
 	++now_loop;
 	//update_size.push_back(update_length);
 	//std::cout << update_length << std::endl;

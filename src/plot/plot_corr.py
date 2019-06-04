@@ -42,13 +42,23 @@ def plot_M(data_no):
 	plot_data(dataM, 'M(r)', 1)
 
 def load_data_no():
-	data_no = 1559619202
+	data_no = 1559631037
 	sys_args = sys.argv
 	if (len(sys_args) > 1):
 		data_no = int(sys_args[1])
 	return data_no
 
+def load_update_size(data_no):
+	data_us = load_file(get_filename('update', data_no), data_shape = (1, -1), data_type = 'int')
+	return data_us
+
 data_no = load_data_no()
+update_size = load_update_size(data_no)
+print(update_size)
+print(np.average(update_size))
+print(np.min(update_size))
+
+
 if (plot_M_flag):
 	plot_M(data_no)
 if (plot_D_flag):
