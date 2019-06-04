@@ -28,6 +28,17 @@ void DimerLattice2D::malloc_space() {
 			}
 		}
 	}
+
+	if_in_set = new bool**[W];
+	for (int x = 0; x < W; ++x) {
+		if_in_set[x] = new bool*[H];
+		for (int y = 0; y < H; ++y) {
+			if_in_set[x][y] = new bool[SET_TYPE];
+			for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
+				if_in_set[x][y][set_no] = false;
+			}
+		}
+	}
 	int lx = -1, ly = -1;
 	for (int x = 0; x < W; ++x) {
 		for (int y = 0; y < H; ++y) {
@@ -289,12 +300,22 @@ void DimerLattice2D::measure_corrM() {
 		M[modify_int(defect[1][0] - defect[0][0], W)] += 1.0;
 	}
 }
+void DimerLattice2D::calculate_set() {
+	for (int x = 0; x < W; ++x) {
+		for (int y = 0; y < H; ++y) {
+			for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
+				if_in_set[x][y][set_no] = is_in_set(x, y, set_no);
+			}
+		}
+	}
+}
 void DimerLattice2D::measure_corrD() {
+	calculate_set();
 	for (int dx = 0; dx < W; ++dx) {
 		for (int x = 0; x < W; ++x) {
 			for (int y = 0; y < H; ++y) {
 				for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
-					if (is_in_set(x, y, set_no) && is_in_set(x + dx, y, set_no)) {
+					if (is_in_set_direct(x, y, set_no) && is_in_set_direct(x + dx, y, set_no)) {
 						corrD[set_no][dx] += 1.0;
 					}
 				}
@@ -389,6 +410,11 @@ bool DimerLattice2D::is_in_set(int x, int y, int set_type) {
 		return (exit_n >= 4) && (exit_n & 1);
 	}
 	return false;
+}
+bool DimerLattice2D::is_in_set_direct(int x, int y, int set_type) {
+	x = modify_int(x, W);
+	y = modify_int(y, H);
+	return if_in_set[x][y][set_type];
 }
 
 DimerLattice2D::~DimerLattice2D() {

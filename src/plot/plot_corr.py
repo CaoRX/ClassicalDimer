@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from load_binary_file import *
 import sys
 
-plot_M_flag = False
-plot_D_flag = False
+plot_M_flag = True
+plot_D_flag = True
 #def load_data(file_no):
 #	file_path = '../build/data/corrM' + str(file_no) + '.dat'
 #	data_file = open(file_path, mode = 'rb')
@@ -46,7 +46,7 @@ def plot_M(data_no):
 	plot_data(dataM, 'M(r)', 1)
 
 def load_data_no():
-	data_no = 1559631786
+	data_no = 1559632808
 	sys_args = sys.argv
 	if (len(sys_args) > 1):
 		data_no = int(sys_args[1])

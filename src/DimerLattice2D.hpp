@@ -53,6 +53,7 @@ public:
 	double equil;
 	int *local_dx, *local_dy, *local_dc;
 	int *update_size;
+	bool ***if_in_set;
 
 
 	DimerLattice2D(int _H, int _W, double _w1 = 1.0, double _w2 = 0.0, int _edx = 1, int _edy = 1, int _loop = default_loop, double _equil = default_equil);
@@ -79,6 +80,7 @@ public:
 	int choose_dir_out(int dir_in);
 
 	void update_configuration();
+	void calculate_set();
 	void measure_corrD();
 	void measure_corrM();
 
@@ -87,6 +89,7 @@ public:
 	void print_corr();
 
 	bool is_in_set(int x, int y, int set_type);
+	bool is_in_set_direct(int x, int y, int set_type);
 
 	~DimerLattice2D();
 
