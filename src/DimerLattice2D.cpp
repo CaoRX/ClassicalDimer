@@ -50,6 +50,10 @@ void DimerLattice2D::malloc_space() {
 			corrD[i][j] = 0.0;
 		}
 	}
+	update_size = new int[loop];
+	for (int i = 0; i < loop; ++i) {
+		update_size[i] = 0;
+	}
 }
 void DimerLattice2D::set_initial_state() {
 	for (int x = 0; x < W; ++x) {
@@ -103,6 +107,10 @@ void DimerLattice2D::set_initial_values() {
 	stdlog_file.open(stdlog_filename, std::ios::out);
 	corrD_filename = "data/corrD" + std::to_string(random_seed) + ".dat";
 	corrD_file.open(corrD_filename, std::ios::out | std::ios::binary);
+	update_filename = "data/update" + std::to_string(random_seed) + ".dat";
+	update_file.open(update_filename, std::ios::out | std::ios::binary);
+
+	//update_size.clear();
 
 	equil_loop = int(equil * loop);
 	now_loop = 0;
@@ -295,8 +303,10 @@ void DimerLattice2D::measure_corrM() {
 }
 void DimerLattice2D::update_configuration() {
 	make_defect();
+	update_size[now_loop] = 0;
 	//print_defect();
 	while (!move_defect()) {
+		++update_size[now_loop];
 		if (now_loop > equil_loop) {
 			measure_corrD();
 		}
@@ -309,6 +319,8 @@ void DimerLattice2D::update_configuration() {
 		measure_corrM();
 	}
 	++now_loop;
+	//update_size.push_back(update_length);
+	//std::cout << update_length << std::endl;
 }
 
 bool DimerLattice2D::check_degree(int degree) {
@@ -353,6 +365,7 @@ void DimerLattice2D::print_corr() {
 	}
 	//stdlog_file << "data file no = " << random_seed << std::endl;
 	corrM_file.write((char *)M, sizeof(double) * W);
+	update_file.write((char *)update_size, sizeof(int) * loop);
 }
 
 bool DimerLattice2D::is_in_set(int x, int y, int set_type) {

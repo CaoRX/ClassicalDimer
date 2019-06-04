@@ -46,12 +46,13 @@ public:
 	std::uniform_real_distribution<double> Random_double;
 	int dir_in;
 	bool debug;
-	std::fstream corrM_file, stdlog_file, corrD_file;
-	std::string corrM_filename, stdlog_filename, corrD_filename;
+	std::fstream corrM_file, stdlog_file, corrD_file, update_file;
+	std::string corrM_filename, stdlog_filename, corrD_filename, update_filename;
 
 	int loop, now_loop, equil_loop;
 	double equil;
 	int *local_dx, *local_dy, *local_dc;
+	int *update_size;
 
 
 	DimerLattice2D(int _H, int _W, double _w1 = 1.0, double _w2 = 0.0, int _edx = 1, int _edy = 1, int _loop = default_loop, double _equil = default_equil);
