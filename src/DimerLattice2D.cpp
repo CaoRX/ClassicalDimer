@@ -310,12 +310,12 @@ void DimerLattice2D::calculate_set() {
 	}
 }
 void DimerLattice2D::measure_corrD() {
-	calculate_set();
+	//calculate_set();
 	for (int dx = 0; dx < W; ++dx) {
-		for (int x = 0; x < W; ++x) {
+		for (int x = 0; x < 1; ++x) {
 			for (int y = 0; y < H; ++y) {
 				for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
-					if (is_in_set_direct(x, y, set_no) && is_in_set_direct(x + dx, y, set_no)) {
+					if (is_in_set(x, y, set_no) && is_in_set(x + dx, y, set_no)) {
 						corrD[set_no][dx] += 1.0;
 					}
 				}
@@ -329,7 +329,7 @@ void DimerLattice2D::update_configuration() {
 	//print_defect();
 	while (!move_defect()) {
 		update_size[now_loop] += 2;
-		if (now_loop > equil_loop) {
+		if (now_loop >= equil_loop) {
 			measure_corrM();
 		}
 		//if (debug) {
@@ -337,7 +337,7 @@ void DimerLattice2D::update_configuration() {
 		//	print_configuration();
 		//}
 	}
-	if (now_loop > equil_loop) {
+	if (now_loop >= equil_loop) {
 		measure_corrD();
 	}
 	//std::cout << update_size[now_loop] << std::endl;

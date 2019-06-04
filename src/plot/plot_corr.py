@@ -46,7 +46,8 @@ def plot_M(data_no):
 	plot_data(dataM, 'M(r)', 1)
 
 def load_data_no():
-	data_no = 1559632808
+	#data_no = 1559633060
+	data_no = 1559634354
 	sys_args = sys.argv
 	if (len(sys_args) > 1):
 		data_no = int(sys_args[1])
