@@ -347,7 +347,7 @@ void DimerLattice2D::print_corr() {
 	//}
 
 	//stdlog_file << std::endl;
-	Normalize_corr();
+	//Normalize_corr();
 	for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
 		corrD_file.write((char *)corrD[set_no], sizeof(double) * W);
 	}
