@@ -192,15 +192,15 @@ void DimerLattice2D::set_dd() {
 }
 
 DimerLattice2D::DimerLattice2D(int _H, int _W, double _w1, double _w2, int _edx, int _edy, int _loop, double _equil): H(_H), W(_W), w1(_w1), w2(_w2), edx(_edx), edy(_edy), loop(_loop), equil(_equil) {
-	std::cout << "Begin initialization" << std::endl;
+	//std::cout << "Begin initialization" << std::endl;
 	set_random();
-	std::cout << "Finish setting random" << std::endl;
+	//std::cout << "Finish setting random" << std::endl;
 	set_dd();
-	std::cout << "Finish setting dd" << std::endl;
+	//std::cout << "Finish setting dd" << std::endl;
 	malloc_space();
 	set_initial_state();
 	set_initial_values();
-	std::cout << "Finish initialization" << std::endl;
+	//std::cout << "Finish initialization" << std::endl;
 
 	//for (int i = 0; i < D; ++i) {
 	//	stdlog_file << local_dx[i] << ' ' << local_dy[i] << ' ' << local_dc[i] << std::endl;
