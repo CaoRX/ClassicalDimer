@@ -291,7 +291,7 @@ void DimerLattice2D::measure_corrM() {
 }
 void DimerLattice2D::measure_corrD() {
 	for (int dx = 0; dx < W; ++dx) {
-		for (int x = 0; x < 1; ++x) {
+		for (int x = 0; x < W; ++x) {
 			for (int y = 0; y < H; ++y) {
 				for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
 					if (is_in_set(x, y, set_no) && is_in_set(x + dx, y, set_no)) {
@@ -375,16 +375,18 @@ bool DimerLattice2D::is_in_set(int x, int y, int set_type) {
 	y = modify_int(y, H);
 	int exit_n = find_exit(x, y);
 	if (set_type == SET1) {
-		return exit_n < 2;
+		//return exit_n < 2;
+		return (exit_n == 0);
 	}
 	if (set_type == SET2) {
-		return (exit_n == 4) || (exit_n == 5);
+		//return (exit_n == 4) || (exit_n == 5);
+		return (exit_n == 4);
 	}
 	if (set_type == SETA) {
-		return (exit_n < 4);
+		return (exit_n < 4) && (exit_n & 1);
 	}
 	if (set_type == SETB) {
-		return (exit_n >= 4);
+		return (exit_n >= 4) && (exit_n & 1);
 	}
 	return false;
 }

@@ -3,8 +3,8 @@ import matplotlib.pyplot as plt
 from load_binary_file import *
 import sys
 
-plot_M_flag = True
-plot_D_flag = True
+plot_M_flag = False
+plot_D_flag = False
 #def load_data(file_no):
 #	file_path = '../build/data/corrM' + str(file_no) + '.dat'
 #	data_file = open(file_path, mode = 'rb')
@@ -28,6 +28,10 @@ def plot_data(data, label_content, normalize_label = -1):
 		data = data / data[normalize_label]
 	plt.plot(x, data, 'o-', label = label_content)
 
+def load_data_D(data_no):
+	return load_file(get_filename('corrD', data_no), data_shape = (4, -1), data_type = 'double')
+def load_data_M(data_no):
+	return load_file(get_filename('corrM', data_no), data_shape = (1, -1), data_type = 'double')
 def plot_D(data_no):
 	#dataD = load_data_D(data_no)
 	dataD = load_file(get_filename('corrD', data_no), data_shape = (4, -1), data_type = 'double')
@@ -42,7 +46,7 @@ def plot_M(data_no):
 	plot_data(dataM, 'M(r)', 1)
 
 def load_data_no():
-	data_no = 1559631037
+	data_no = 1559631786
 	sys_args = sys.argv
 	if (len(sys_args) > 1):
 		data_no = int(sys_args[1])
@@ -63,8 +67,6 @@ if (plot_M_flag):
 	plot_M(data_no)
 if (plot_D_flag):
 	plot_D(data_no)
-
-
 
 plt.legend()
 plt.show()
