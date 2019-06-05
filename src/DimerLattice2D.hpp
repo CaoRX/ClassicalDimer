@@ -49,7 +49,7 @@ public:
 	std::fstream corrM_file, stdlog_file, corrD_file, update_file;
 	std::string corrM_filename, stdlog_filename, corrD_filename, update_filename;
 
-	int loop, now_loop, equil_loop;
+	int loop, now_loop, equil_loop, report_loop;
 	double equil;
 	int *local_dx, *local_dy, *local_dc;
 	int *update_size;
@@ -90,6 +90,8 @@ public:
 
 	bool is_in_set(int x, int y, int set_type);
 	bool is_in_set_direct(int x, int y, int set_type);
+
+	void simulate();
 
 	~DimerLattice2D();
 

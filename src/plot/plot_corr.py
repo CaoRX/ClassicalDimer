@@ -56,7 +56,7 @@ def plot_M(data_no, skip = False):
 
 def load_data_no():
 	#data_no = 1559633060
-	data_no = 1559636279
+	#data_no = 1559636279
 	sys_args = sys.argv
 	if (len(sys_args) > 1):
 		data_no = int(sys_args[1])
@@ -66,23 +66,28 @@ def load_update_size(data_no):
 	data_us = load_file(get_filename('update', data_no), data_shape = (1, -1), data_type = 'int')
 	return data_us
 
-data_no = 1559637108
+data_no = 1559637744
+
+def work_data(data_no):
+	if (plot_M_flag):
+		plot_M(data_no, True)
+	if (plot_D_flag):
+		plot_D(data_no)
+
+work_data(data_no)
+
 #update_size = load_update_size(data_no)
 #print(update_size)
 #print(np.average(update_size))
 #print(np.min(update_size))
 
 
-if (plot_M_flag):
-	plot_M(data_no)
-if (plot_D_flag):
-	plot_D(data_no)
 
-data_no = 1559636279
-if (plot_M_flag):
-	plot_M(data_no, True)
-if (plot_D_flag):
-	plot_D(data_no, True)
+#data_no = 1559636279
+#if (plot_M_flag):
+#	plot_M(data_no, True)
+#if (plot_D_flag):
+#	plot_D(data_no, True)
 
 plt.legend()
 plt.show()

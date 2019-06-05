@@ -11,7 +11,7 @@ double equil = default_equil;
 void Test_DimerLattice() {
 	DimerLattice2D DL(L, L, w1, w2, Dx, Dy, loop, equil);
 	//DL.print_configuration();
-	for (int i = 0; i < loop; ++i) {
+	/*for (int i = 0; i < loop; ++i) {
 		//if (i == 84) {
 		//	DL.debug = true;
 		//}
@@ -24,8 +24,9 @@ void Test_DimerLattice() {
 		//else {
 		//	DL.stdlog_file << "correct at " << i << "-th loop" << std::endl;
 		//}
-	}
+	}*/
 	//DL.print_configuration();
+	DL.simulate();
 
 	if (!DL.check_degree()) {
 		DL.stdlog_file << "something wrong!!!!!" << std::endl;

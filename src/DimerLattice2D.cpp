@@ -84,6 +84,8 @@ void DimerLattice2D::print_log(std::fstream &logfile) {
 	logfile << "(dx, dy) = (" << edx << ", " << edy << ")" << std::endl;
 	logfile << "D = " << D << std::endl;
 	logfile << "random seed = " << random_seed << std::endl;
+	logfile << "w1 = " << w1 << std::endl;
+	logfile << "w2 = " << w2 << std::endl;
 }
 void DimerLattice2D::set_initial_values() {
 	if (w1 > w2) {
@@ -125,6 +127,10 @@ void DimerLattice2D::set_initial_values() {
 
 	equil_loop = int(equil * loop);
 	now_loop = 0;
+	report_loop = int(0.01 * loop);
+	if (report_loop < 10) {
+		report_loop = 10;
+	}
 	print_log(stdlog_file);
 }
 void DimerLattice2D::set_random() {
@@ -323,6 +329,7 @@ void DimerLattice2D::measure_corrD() {
 		}
 	}
 }
+
 void DimerLattice2D::update_configuration() {
 	make_defect();
 	update_size[now_loop] = 2;
@@ -417,6 +424,19 @@ bool DimerLattice2D::is_in_set_direct(int x, int y, int set_type) {
 	return if_in_set[x][y][set_type];
 }
 
+void DimerLattice2D::simulate() {
+	for (int i = 0; i < loop; ++i) {
+		if (i % report_loop == 0) {
+			stdlog_file << "loop " << i << std::endl;
+		}
+		update_configuration();
+		if (!check_degree()) {
+			std::cerr << "error at " << i << "-th loop" << std::endl;
+			print_configuration();
+			return ;
+		}
+	}
+}
 DimerLattice2D::~DimerLattice2D() {
 	corrM_file.close();
 }

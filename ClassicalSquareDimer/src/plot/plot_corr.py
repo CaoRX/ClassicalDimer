@@ -83,7 +83,7 @@ def load_update_size(data_no):
 #	plot_M(data_no, True)
 #if (plot_D_flag):
 #	plot_D(data_no, True)
-data_no = 1559644990
+data_no = 1559645592
 plot_M(data_no, True)
 
 
