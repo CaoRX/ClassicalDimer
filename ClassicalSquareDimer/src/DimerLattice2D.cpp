@@ -29,7 +29,7 @@ void DimerLattice2D::malloc_space() {
 		}
 	}
 
-	if_in_set = new bool**[W];
+	/*if_in_set = new bool**[W];
 	for (int x = 0; x < W; ++x) {
 		if_in_set[x] = new bool*[H];
 		for (int y = 0; y < H; ++y) {
@@ -38,7 +38,7 @@ void DimerLattice2D::malloc_space() {
 				if_in_set[x][y][set_no] = false;
 			}
 		}
-	}
+	}*/
 	int lx = -1, ly = -1;
 	for (int x = 0; x < W; ++x) {
 		for (int y = 0; y < H; ++y) {
@@ -53,14 +53,14 @@ void DimerLattice2D::malloc_space() {
 	M = new double[W];
 	for (int i = 0; i < W; ++i) {
 		M[i] = 0.0;
-	}
+	}/*
 	corrD = new double*[SET_TYPE];
 	for (int i = 0; i < SET_TYPE; ++i) {
 		corrD[i] = new double[W];
 		for (int j = 0; j < W; ++j) {
 			corrD[i][j] = 0.0;
 		}
-	}
+	}*/
 	update_size = new int[loop];
 	for (int i = 0; i < loop; ++i) {
 		update_size[i] = 0;
@@ -81,14 +81,12 @@ void DimerLattice2D::print_log(std::fstream &logfile) {
 	logfile << "W = " << W << std::endl;
 	logfile << "loop = " << loop << std::endl;
 	logfile << "equil loop = " << equil_loop << std::endl;
-	logfile << "(dx, dy) = (" << edx << ", " << edy << ")" << std::endl;
-	logfile << "D = " << D << std::endl;
+	//logfile << "(dx, dy) = (" << edx << ", " << edy << ")" << std::endl;
+	//logfile << "D = " << D << std::endl;
 	logfile << "random seed = " << random_seed << std::endl;
-	logfile << "w1 = " << w1 << std::endl;
-	logfile << "w2 = " << w2 << std::endl;
 }
 void DimerLattice2D::set_initial_values() {
-	if (w1 > w2) {
+	/*if (w1 > w2) {
 		weight[0][0] = (w1 - (D - 4) * w2 / (D - 1)) / (4 - 1);
 		weight[0][1] = weight[1][0] = weight[1][1] = w2 / (D - 1);
 	}
@@ -102,7 +100,7 @@ void DimerLattice2D::set_initial_values() {
 	}
 	if (fabs(w1) > eps) {
 		weight[0][0] /= w1; weight[0][1] /= w1;
-	}
+	}*/
 
 	//stdlog_file << weight[0][0] << ' ' << weight[0][1] << std::endl;
 	//stdlog_file << weight[1][0] << ' ' << weight[1][1] << std::endl;
@@ -114,23 +112,23 @@ void DimerLattice2D::set_initial_values() {
 	}
 	dir_in = -1;
 	debug = false;
+	stdlog_filename = "data/log" + std::to_string(random_seed) + ".dat";
+	stdlog_file.open(stdlog_filename, std::ios::out);
 	corrM_filename = "data/corrM" + std::to_string(random_seed) + ".dat";
 	corrM_file.open(corrM_filename, std::ios::out | std::ios::binary);
+	update_filename = "data/update" + std::to_string(random_seed) + ".dat";
+	update_file.open(update_filename, std::ios::out | std::ios::binary);
+	/*
 	stdlog_filename = "data/log" + std::to_string(random_seed) + ".dat";
 	stdlog_file.open(stdlog_filename, std::ios::out);
 	corrD_filename = "data/corrD" + std::to_string(random_seed) + ".dat";
 	corrD_file.open(corrD_filename, std::ios::out | std::ios::binary);
-	update_filename = "data/update" + std::to_string(random_seed) + ".dat";
-	update_file.open(update_filename, std::ios::out | std::ios::binary);
+*/
 
 	//update_size.clear();
 
 	equil_loop = int(equil * loop);
 	now_loop = 0;
-	report_loop = int(0.01 * loop);
-	if (report_loop < 10) {
-		report_loop = 10;
-	}
 	print_log(stdlog_file);
 }
 void DimerLattice2D::set_random() {
@@ -139,7 +137,7 @@ void DimerLattice2D::set_random() {
 	Random_double = std::uniform_real_distribution<double>(0.0, 1.0);
 	srand(random_seed);
 }
-void DimerLattice2D::set_dd() {
+/*void DimerLattice2D::set_dd() {
 	D = ((edx == edy) || (edx == 0) || (edy == 0)) ? (4 + 4) : (4 + 8);
 	local_dx = new int[D];
 	local_dy = new int[D];
@@ -182,14 +180,27 @@ void DimerLattice2D::set_dd() {
 
 	std::swap(edx, edy);
 
+}*/
+void DimerLattice2D::set_dd() {
+	D = DIR_NUM;
+	local_dx = new int[D];
+	local_dy = new int[D];
+	for (int i = 0; i < D; ++i) {
+		local_dx[i] = sqr_dx[i];
+		local_dy[i] = sqr_dy[i];
+	}
 }
 
 DimerLattice2D::DimerLattice2D(int _H, int _W, double _w1, double _w2, int _edx, int _edy, int _loop, double _equil): H(_H), W(_W), w1(_w1), w2(_w2), edx(_edx), edy(_edy), loop(_loop), equil(_equil) {
+	//std::cout << "Begin initialization" << std::endl;
 	set_random();
+	//std::cout << "Finish setting random" << std::endl;
 	set_dd();
+	//std::cout << "Finish setting dd" << std::endl;
 	malloc_space();
 	set_initial_state();
 	set_initial_values();
+	//std::cout << "Finish initialization" << std::endl;
 
 	//for (int i = 0; i < D; ++i) {
 	//	stdlog_file << local_dx[i] << ' ' << local_dy[i] << ' ' << local_dc[i] << std::endl;
@@ -248,13 +259,13 @@ void DimerLattice2D::make_defect() {
 }
 
 int DimerLattice2D::choose_dir_out(int dir_in) {
-	double choice = random_double();
-	double cur = 0.0;
+	int choice = random_int(DIR_NUM - 1);
 	for (int dir = 0; dir < D; ++dir) {
 		if (dir != dir_in) {
-			cur += weight[local_dc[dir_in]][local_dc[dir]];
+			//cur += weight[local_dc[dir_in]][local_dc[dir]];
+			--choice;
 			//stdlog_file << cur << std::endl;
-			if (cur >= choice) {
+			if (choice == -1) {
 				return dir;
 			}
 		}
@@ -306,7 +317,7 @@ void DimerLattice2D::measure_corrM() {
 		M[modify_int(defect[1][0] - defect[0][0], W)] += 1.0;
 	}
 }
-void DimerLattice2D::calculate_set() {
+/*void DimerLattice2D::calculate_set() {
 	for (int x = 0; x < W; ++x) {
 		for (int y = 0; y < H; ++y) {
 			for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
@@ -328,8 +339,7 @@ void DimerLattice2D::measure_corrD() {
 			}
 		}
 	}
-}
-
+}*/
 void DimerLattice2D::update_configuration() {
 	make_defect();
 	update_size[now_loop] = 2;
@@ -344,9 +354,9 @@ void DimerLattice2D::update_configuration() {
 		//	print_configuration();
 		//}
 	}
-	if (now_loop >= equil_loop) {
-		measure_corrD();
-	}
+	//if (now_loop >= equil_loop) {
+	//	measure_corrD();
+	//}
 	//std::cout << update_size[now_loop] << std::endl;
 	++now_loop;
 	//update_size.push_back(update_length);
@@ -368,7 +378,7 @@ bool DimerLattice2D::check_degree(int degree) {
 	}
 	return true;
 }
-void DimerLattice2D::Normalize_corr() {
+/*void DimerLattice2D::Normalize_corr() {
 	double norm_m = M[1];
 	for (int i = 0; i < W; ++i) {
 		M[i] /= norm_m;
@@ -380,7 +390,7 @@ void DimerLattice2D::Normalize_corr() {
 			corrD[set_no][i] /= norm_d;
 		}
 	}
-}
+}*/
 void DimerLattice2D::print_corr() {
 	//double normal_m = M[1];
 	//for (int i = 0; i < W; ++i) {
@@ -390,15 +400,15 @@ void DimerLattice2D::print_corr() {
 
 	//stdlog_file << std::endl;
 	//Normalize_corr();
-	for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
-		corrD_file.write((char *)corrD[set_no], sizeof(double) * W);
-	}
+	//for (int set_no = 0; set_no < SET_TYPE; ++set_no) {
+	//	corrD_file.write((char *)corrD[set_no], sizeof(double) * W);
+	//}
 	//stdlog_file << "data file no = " << random_seed << std::endl;
 	corrM_file.write((char *)M, sizeof(double) * W);
 	update_file.write((char *)update_size, sizeof(int) * loop);
 }
 
-bool DimerLattice2D::is_in_set(int x, int y, int set_type) {
+/*bool DimerLattice2D::is_in_set(int x, int y, int set_type) {
 	x = modify_int(x, W);
 	y = modify_int(y, H);
 	int exit_n = find_exit(x, y);
@@ -422,21 +432,8 @@ bool DimerLattice2D::is_in_set_direct(int x, int y, int set_type) {
 	x = modify_int(x, W);
 	y = modify_int(y, H);
 	return if_in_set[x][y][set_type];
-}
+}*/
 
-void DimerLattice2D::simulate() {
-	for (int i = 0; i < loop; ++i) {
-		if (i % report_loop == 0) {
-			stdlog_file << "loop " << i << std::endl;
-		}
-		update_configuration();
-		if (!check_degree()) {
-			std::cerr << "error at " << i << "-th loop" << std::endl;
-			print_configuration();
-			return ;
-		}
-	}
-}
 DimerLattice2D::~DimerLattice2D() {
 	corrM_file.close();
 }

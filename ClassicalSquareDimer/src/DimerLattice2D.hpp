@@ -8,16 +8,13 @@
 #include <string>
 #define eps 1e-9
 
-//const int dx[8] = {1, -1, 0, 0, 1, -1, 1, -1};
-//const int dy[8] = {0, 0, 1, -1, -1, 1, 1, -1};
-//const int dc[8] = {0, 0, 0, 0, 1, 1, 1, 1};
-
 #define SET1 0
 #define SET2 1
 #define SETA 2
 #define SETB 3
 
 #define SET_TYPE 4
+#define DIR_NUM 4
 
 const int dx[8] = {1, -1, 0, 0, 1, -1, 1, -1};
 const int dy[8] = {0, 0, 1, -1, -1, 1, 1, -1};
@@ -53,7 +50,7 @@ public:
 	std::fstream corrM_file, stdlog_file, corrD_file, update_file;
 	std::string corrM_filename, stdlog_filename, corrD_filename, update_filename;
 
-	int loop, now_loop, equil_loop, report_loop;
+	int loop, now_loop, equil_loop;
 	double equil;
 	int *local_dx, *local_dy, *local_dc;
 	int *update_size;
@@ -94,8 +91,6 @@ public:
 
 	bool is_in_set(int x, int y, int set_type);
 	bool is_in_set_direct(int x, int y, int set_type);
-
-	void simulate();
 
 	~DimerLattice2D();
 
